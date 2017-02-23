@@ -35,9 +35,14 @@ var srcsetMaxWidth = elem => {
     return Math.max.apply(Math, srcsetWidths);
 }
 
-var srcsetFixSizes = elem => {
-    if(elem.hasAttribute('srcset')) {
-        elem.setAttribute('sizes', elem.width + 'px');
+var srcsetFixSizes = elems => {
+    for (var i = 0; i < elems.length; i++) {
+
+        var elem = elems[i];
+
+        if(elem.hasAttribute('srcset')) {
+            elem.setAttribute('sizes', elem.width + 'px');
+        }
     }
 }
 

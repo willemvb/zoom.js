@@ -28,8 +28,6 @@ var initialTouchPos = -1;
 
 var setup = (elem) => {
     elem.addEventListener("click", prepareZoom);
-
-    srcsetFixSizes(elem);
 };
 
 var prepareZoom = e => {

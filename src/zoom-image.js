@@ -45,8 +45,8 @@ export class ZoomImage {
         document.body.classList.add("zoom-overlay-open");
 
         once(this.img, "transitionend", () => {
-            if(!!this.img.zoomedMaxWidth){
-                this.img.setAttribute('sizes', this.img.zoomedMaxWidth + 'px')
+            if(this.img.hasAttribute('srcset')){
+                this.img.setAttribute('sizes', Math.ceil(this.img.width * scale) + 'px');
             }
         });
     }
@@ -59,8 +59,7 @@ export class ZoomImage {
             var srcSetMaxWidth = srcsetMaxWidth(this.img);
 
             if(srcSetMaxWidth > 0) {
-                this.img.zoomedMaxWidth = srcSetMaxWidth *  window.devicePixelRatio;
-                size.w = this.img.zoomedMaxWidth;
+                size.w = srcSetMaxWidth *  window.devicePixelRatio;
                 size.h = size.w / imageAspectRatio;
             }
         }
@@ -123,7 +122,7 @@ export class ZoomImage {
         }
         this.wrap.style.transform = "none";
 
-        srcsetFixSizes(this.img);
+        srcsetFixSizes([this.img]);
 
         once(this.img, "transitionend", () => {
             this.dispose();
