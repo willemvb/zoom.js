@@ -19,7 +19,7 @@
  */
 
 import { ZoomImage } from "./zoom-image.js";
-import { windowWidth, windowHeight } from "./utils.js";
+import { windowWidth, windowHeight, srcsetFixSizes } from "./utils.js";
 
 var current = null;
 var offset = 80;
@@ -28,6 +28,8 @@ var initialTouchPos = -1;
 
 var setup = (elem) => {
     elem.addEventListener("click", prepareZoom);
+
+    srcsetFixSizes(elem);
 };
 
 var prepareZoom = e => {

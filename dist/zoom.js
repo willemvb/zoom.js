@@ -80,20 +80,23 @@
         return __webpack_require__(__webpack_require__.s = 3);
     })([ function(module, exports, __webpack_require__) {
         "use strict";
-        __webpack_require__.d(exports, "a", function() {
+        __webpack_require__.d(exports, "b", function() {
             return windowWidth;
         });
-        __webpack_require__.d(exports, "d", function() {
+        __webpack_require__.d(exports, "e", function() {
             return windowHeight;
         });
-        __webpack_require__.d(exports, "e", function() {
+        __webpack_require__.d(exports, "f", function() {
             return elemOffset;
         });
-        __webpack_require__.d(exports, "b", function() {
+        __webpack_require__.d(exports, "c", function() {
             return once;
         });
-        __webpack_require__.d(exports, "c", function() {
-            return maxSrcSetWidth;
+        __webpack_require__.d(exports, "d", function() {
+            return srcsetMaxWidth;
+        });
+        __webpack_require__.d(exports, "a", function() {
+            return srcsetFixSizes;
         });
         var windowWidth = function windowWidth() {
             return document.documentElement.clientWidth;
@@ -117,8 +120,8 @@
             };
             elem.addEventListener(type, fn);
         };
-        var maxSrcSetWidth = function maxSrcSetWidth(srcset) {
-            var srcsetValues = srcset.split(",");
+        var srcsetMaxWidth = function srcsetMaxWidth(elem) {
+            var srcsetValues = elem.getAttribute("srcset").split(",");
             var srcsetWidths = srcsetValues.map(function(value) {
                 var value = value.trim();
                 var width = value.split(" ")[1].trim();
@@ -128,6 +131,11 @@
                 return 0;
             });
             return Math.max.apply(Math, srcsetWidths);
+        };
+        var srcsetFixSizes = function srcsetFixSizes(elem) {
+            if (elem.hasAttribute("srcset")) {
+                elem.setAttribute("sizes", elem.width + "px");
+            }
         };
     }, function(module, exports, __webpack_require__) {
         "use strict";
@@ -142,6 +150,7 @@
         var initialTouchPos = -1;
         var setup = function setup(elem) {
             elem.addEventListener("click", prepareZoom);
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__utils_js__["a"])(elem);
         };
         var prepareZoom = function prepareZoom(e) {
             if (document.body.classList.contains("zoom-overlay-open")) {
@@ -151,7 +160,7 @@
                 window.open(e.target.getAttribute("data-original") || e.target.src, "_blank");
                 return;
             }
-            if (e.target.width >= __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__utils_js__["a"])() - offset) {
+            if (e.target.width >= __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__utils_js__["b"])() - offset) {
                 return;
             }
             closeCurrent(true);
@@ -262,27 +271,27 @@
                     this.forceRepaint();
                     this.animate(scale);
                     document.body.classList.add("zoom-overlay-open");
-                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["b"])(this.img, "transitionend", function() {
-                        if (!!_this.img.srcsetMaxWidth) {
-                            _this.img.setAttribute("sizes", _this.img.srcsetMaxWidth + "px");
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["c"])(this.img, "transitionend", function() {
+                        if (!!_this.img.zoomedMaxWidth) {
+                            _this.img.setAttribute("sizes", _this.img.zoomedMaxWidth + "px");
                         }
                     });
                 }
             }, {
                 key: "calculateScale",
                 value: function calculateScale(size) {
-                    var maxScaleFactor = size.w / this.img.width;
-                    if (this.img.hasAttribute("srcset") & this.img.hasAttribute("sizes")) {
-                        var srcsetMaxWidth = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["c"])(this.img.getAttribute("srcset"));
-                        if (srcsetMaxWidth > 0) {
-                            this.img.srcsetSizes = this.img.getAttribute("sizes");
-                            this.img.srcsetMaxWidth = srcsetMaxWidth;
-                            var maxScaleFactor = srcsetMaxWidth / this.img.width;
+                    var imageAspectRatio = size.w / size.h;
+                    if (this.img.hasAttribute("srcset")) {
+                        var srcSetMaxWidth = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["d"])(this.img);
+                        if (srcSetMaxWidth > 0) {
+                            this.img.zoomedMaxWidth = srcSetMaxWidth * window.devicePixelRatio;
+                            size.w = this.img.zoomedMaxWidth;
+                            size.h = size.w / imageAspectRatio;
                         }
                     }
-                    var viewportWidth = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["a"])() - this.offset;
-                    var viewportHeight = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["d"])() - this.offset;
-                    var imageAspectRatio = size.w / size.h;
+                    var maxScaleFactor = size.w / this.img.width;
+                    var viewportWidth = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["b"])() - this.offset;
+                    var viewportHeight = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["e"])() - this.offset;
                     var viewportAspectRatio = viewportWidth / viewportHeight;
                     if (size.w < viewportWidth && size.h < viewportHeight) {
                         return maxScaleFactor;
@@ -295,10 +304,10 @@
             }, {
                 key: "animate",
                 value: function animate(scale) {
-                    var imageOffset = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["e"])(this.img);
+                    var imageOffset = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["f"])(this.img);
                     var scrollTop = window.pageYOffset;
-                    var viewportX = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["a"])() / 2;
-                    var viewportY = scrollTop + __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["d"])() / 2;
+                    var viewportX = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["b"])() / 2;
+                    var viewportY = scrollTop + __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["e"])() / 2;
                     var imageCenterX = imageOffset.left + this.img.width / 2;
                     var imageCenterY = imageOffset.top + this.img.height / 2;
                     var tx = viewportX - imageCenterX;
@@ -332,10 +341,8 @@
                         this.img.removeAttribute("style");
                     }
                     this.wrap.style.transform = "none";
-                    if (!!this.img.srcsetMaxWidth) {
-                        this.img.setAttribute("sizes", this.img.srcsetSizes);
-                    }
-                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["b"])(this.img, "transitionend", function() {
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["a"])(this.img);
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["c"])(this.img, "transitionend", function() {
                         _this2.dispose();
                         document.body.classList.remove("zoom-overlay-open");
                     });

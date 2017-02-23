@@ -19,8 +19,8 @@ var once = (elem, type, handler) => {
     elem.addEventListener(type, fn);
 };
 
-var maxSrcSetWidth = srcset => {
-    var srcsetValues = srcset.split(',')
+var srcsetMaxWidth = elem => {
+    var srcsetValues = elem.getAttribute('srcset').split(',')
     var srcsetWidths = srcsetValues.map( (value) => {
         var value = value.trim();
         var width = value.split(' ')[1].trim();
@@ -35,4 +35,10 @@ var maxSrcSetWidth = srcset => {
     return Math.max.apply(Math, srcsetWidths);
 }
 
-export { windowWidth, windowHeight, elemOffset, once, maxSrcSetWidth };
+var srcsetFixSizes = elem => {
+    if(elem.hasAttribute('srcset')) {
+        elem.setAttribute('sizes', elem.width + 'px');
+    }
+}
+
+export { windowWidth, windowHeight, elemOffset, once, srcsetMaxWidth, srcsetFixSizes };

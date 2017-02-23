@@ -1,4 +1,4 @@
-import { elemOffset, once, windowWidth, windowHeight, maxSrcSetWidth } from "./utils.js";
+import { elemOffset, once, windowWidth, windowHeight, srcsetMaxWidth, srcsetFixSizes } from "./utils.js";
 
 class Size {
     constructor(w, h) {
@@ -45,32 +45,30 @@ export class ZoomImage {
         document.body.classList.add("zoom-overlay-open");
 
         once(this.img, "transitionend", () => {
-            if(!!this.img.srcsetMaxWidth){
-                this.img.setAttribute('sizes', this.img.srcsetMaxWidth + 'px')
+            if(!!this.img.zoomedMaxWidth){
+                this.img.setAttribute('sizes', this.img.zoomedMaxWidth + 'px')
             }
-
         });
     }
 
     calculateScale(size) {
 
-        var maxScaleFactor = size.w / this.img.width;
+        var imageAspectRatio = size.w / size.h;
 
-        if(this.img.hasAttribute('srcset') & this.img.hasAttribute('sizes')){
+        if(this.img.hasAttribute('srcset')){
+            var srcSetMaxWidth = srcsetMaxWidth(this.img);
 
-            var srcsetMaxWidth = maxSrcSetWidth(this.img.getAttribute('srcset'));
-
-            if(srcsetMaxWidth > 0) {
-                this.img.srcsetSizes = this.img.getAttribute('sizes');
-                this.img.srcsetMaxWidth = srcsetMaxWidth;
-                var maxScaleFactor = srcsetMaxWidth / this.img.width;
+            if(srcSetMaxWidth > 0) {
+                this.img.zoomedMaxWidth = srcSetMaxWidth *  window.devicePixelRatio;
+                size.w = this.img.zoomedMaxWidth;
+                size.h = size.w / imageAspectRatio;
             }
-
         }
+
+        var maxScaleFactor = size.w / this.img.width;
 
         var viewportWidth = (windowWidth() - this.offset);
         var viewportHeight = (windowHeight() - this.offset);
-        var imageAspectRatio = size.w / size.h;
         var viewportAspectRatio = viewportWidth / viewportHeight;
 
         if (size.w < viewportWidth && size.h < viewportHeight) {
@@ -125,9 +123,7 @@ export class ZoomImage {
         }
         this.wrap.style.transform = "none";
 
-        if(!!this.img.srcsetMaxWidth){
-            this.img.setAttribute('sizes', this.img.srcsetSizes);
-        }
+        srcsetFixSizes(this.img);
 
         once(this.img, "transitionend", () => {
             this.dispose();
