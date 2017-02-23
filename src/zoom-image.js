@@ -1,4 +1,4 @@
-import { elemOffset, once, windowWidth, windowHeight } from "./utils.js";
+import { elemOffset, once, windowWidth, windowHeight, maxSrcSetWidth } from "./utils.js";
 
 class Size {
     constructor(w, h) {
@@ -43,10 +43,30 @@ export class ZoomImage {
         this.animate(scale);
 
         document.body.classList.add("zoom-overlay-open");
+
+        once(this.img, "transitionend", () => {
+            if(!!this.img.srcsetMaxWidth){
+                this.img.setAttribute('sizes', this.img.srcsetMaxWidth + 'px')
+            }
+
+        });
     }
 
     calculateScale(size) {
+
         var maxScaleFactor = size.w / this.img.width;
+
+        if(this.img.hasAttribute('srcset') & this.img.hasAttribute('sizes')){
+
+            var srcsetMaxWidth = maxSrcSetWidth(this.img.getAttribute('srcset'));
+
+            if(srcsetMaxWidth > 0) {
+                this.img.srcsetSizes = this.img.getAttribute('sizes');
+                this.img.srcsetMaxWidth = srcsetMaxWidth;
+                var maxScaleFactor = srcsetMaxWidth / this.img.width;
+            }
+
+        }
 
         var viewportWidth = (windowWidth() - this.offset);
         var viewportHeight = (windowHeight() - this.offset);
@@ -104,6 +124,10 @@ export class ZoomImage {
             this.img.removeAttribute("style");
         }
         this.wrap.style.transform = "none";
+
+        if(!!this.img.srcsetMaxWidth){
+            this.img.setAttribute('sizes', this.img.srcsetSizes);
+        }
 
         once(this.img, "transitionend", () => {
             this.dispose();
