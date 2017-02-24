@@ -122,7 +122,6 @@
         };
         var srcsetMaxWidth = function srcsetMaxWidth(elem) {
             var srcsetValues = elem.getAttribute("srcset").replace(/\n/g, " ").split(", ");
-            console.log(srcsetValues);
             var srcsetWidths = srcsetValues.map(function(value) {
                 var value = value.trim();
                 var width = value.split(" ")[1].trim();
@@ -259,7 +258,8 @@
                 key: "zoom",
                 value: function zoom() {
                     var _this = this;
-                    var size = new Size(this.img.naturalWidth, this.img.naturalHeight);
+                    var naturalSize = new Size(this.img.naturalWidth, this.img.naturalHeight);
+                    var imgSize = new Size(this.img.width, this.img.height);
                     this.wrap = document.createElement("div");
                     this.wrap.classList.add("zoom-img-wrap");
                     this.img.parentNode.insertBefore(this.wrap, this.img);
@@ -270,9 +270,9 @@
                     this.overlay.classList.add("zoom-overlay");
                     document.body.appendChild(this.overlay);
                     this.forceRepaint();
-                    var scale = this.calculateScale(size);
+                    var scale = this.calculateScale(naturalSize);
                     this.forceRepaint();
-                    this.animate(scale);
+                    this.animate(scale, imgSize);
                     document.body.classList.add("zoom-overlay-open");
                     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["c"])(this.img, "transitionend", function() {
                         if (_this.img.hasAttribute("srcset")) {
@@ -305,13 +305,13 @@
                 }
             }, {
                 key: "animate",
-                value: function animate(scale) {
+                value: function animate(scale, size) {
                     var imageOffset = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["f"])(this.img);
                     var scrollTop = window.pageYOffset;
                     var viewportX = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["b"])() / 2;
                     var viewportY = scrollTop + __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__utils_js__["e"])() / 2;
-                    var imageCenterX = imageOffset.left + this.img.width / 2;
-                    var imageCenterY = imageOffset.top + this.img.height / 2;
+                    var imageCenterX = imageOffset.left + size.w / 2;
+                    var imageCenterY = imageOffset.top + size.h / 2;
                     var tx = viewportX - imageCenterX;
                     var ty = viewportY - imageCenterY;
                     var tz = 0;

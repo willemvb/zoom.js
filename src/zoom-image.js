@@ -22,7 +22,8 @@ export class ZoomImage {
     }
 
     zoom() {
-        var size = new Size(this.img.naturalWidth, this.img.naturalHeight);
+        var naturalSize = new Size(this.img.naturalWidth, this.img.naturalHeight);
+        var imgSize = new Size(this.img.width, this.img.height);
 
         this.wrap = document.createElement("div");
         this.wrap.classList.add("zoom-img-wrap");
@@ -37,10 +38,10 @@ export class ZoomImage {
         document.body.appendChild(this.overlay);
 
         this.forceRepaint();
-        var scale = this.calculateScale(size);
+        var scale = this.calculateScale(naturalSize);
 
         this.forceRepaint();
-        this.animate(scale);
+        this.animate(scale, imgSize);
 
         document.body.classList.add("zoom-overlay-open");
 
@@ -79,15 +80,15 @@ export class ZoomImage {
         }
     }
 
-    animate(scale) {
+    animate(scale, size) {
         var imageOffset = elemOffset(this.img);
         var scrollTop = window.pageYOffset;
 
         var viewportX = (windowWidth() / 2);
         var viewportY = scrollTop + (windowHeight() / 2);
 
-        var imageCenterX = imageOffset.left + (this.img.width / 2);
-        var imageCenterY = imageOffset.top + (this.img.height / 2);
+        var imageCenterX = imageOffset.left + (size.w / 2);
+        var imageCenterY = imageOffset.top + (size.h / 2);
 
         var tx = viewportX - imageCenterX;
         var ty = viewportY - imageCenterY;
