@@ -20,7 +20,7 @@ var once = (elem, type, handler) => {
 };
 
 var srcsetMaxWidth = elem => {
-    var srcsetValues = elem.getAttribute('srcset').split(',')
+    var srcsetValues = elem.getAttribute('srcset').replace( /\n/g, " " ).split(', ');
     var srcsetWidths = srcsetValues.map( (value) => {
         var value = value.trim();
         var width = value.split(' ')[1].trim();

@@ -121,7 +121,8 @@
             elem.addEventListener(type, fn);
         };
         var srcsetMaxWidth = function srcsetMaxWidth(elem) {
-            var srcsetValues = elem.getAttribute("srcset").split(",");
+            var srcsetValues = elem.getAttribute("srcset").replace(/\n/g, " ").split(", ");
+            console.log(srcsetValues);
             var srcsetWidths = srcsetValues.map(function(value) {
                 var value = value.trim();
                 var width = value.split(" ")[1].trim();
