@@ -4,10 +4,13 @@ A pure JavaScript image zooming plugin with scrset support; as seen on
 [Medium.com](https://medium.com/designing-medium/image-zoom-on-medium-24d146fc0c20).
 
 Has no jQuery or Bootstrap dependencies.
+
 Has srcset support.
 
 Original version by @fat: <https://github.com/fat/zoom.js>.
 This is a port of the npm version by @nishanths: <https://github.com/nishanths/zoom.js>.
+
+https://htmlpreview.github.io/?https://github.com/willemvb/zoom.js/blob/master/index.html
 
 ## Usage
 
@@ -53,9 +56,7 @@ You can use zoom.js directly as a script, or install via [yarn](https://github.c
 
 ## Demo
 
-<https://nishanths.github.io/zoom.js>
-
-![gif](https://i.imgur.com/gj3foRU.gif)
+https://htmlpreview.github.io/?https://github.com/willemvb/zoom.js/blob/master/index.html
 
 
 ## Notes
