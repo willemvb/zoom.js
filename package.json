@@ -1,23 +1,23 @@
 {
-  "name": "@nishanths/zoom.js",
+  "name": "willemvb/zoom.js",
   "version": "2.0.1",
   "description": "Medium.com's image zoom with no dependencies",
   "main": "dist/zoom.js",
   "jsnext:main": "src/zoom.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:nishanths/zoom.js.git"
+    "url": "git@github.com:willemvb/zoom.js.git"
   },
   "keywords": [
     "zoom",
     "image"
   ],
-  "author": "nishanths <nishanths@utexas.edu>",
+  "author": "willemvb <willem@spatie.be>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nishanths/zoom.js/issues"
+    "url": "https://github.com/willemvb/zoom.js/issues"
   },
-  "homepage": "https://github.com/nishanths/zoom.js",
+  "homepage": "https://github.com/willemvb/zoom.js",
   "devDependencies": {
     "babel-cli": "6.18.0",
     "babel-plugin-iife-wrap": "1.1.0",
