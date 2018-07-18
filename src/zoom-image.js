@@ -1,4 +1,4 @@
-import { elemOffset, once, windowWidth, windowHeight } from "./utils.js";
+import { elemOffset, once, windowWidth, windowHeight, srcsetMaxWidth, srcsetFixSizes } from "./utils.js";
 
 class Size {
     constructor(w, h) {
@@ -22,7 +22,8 @@ export class ZoomImage {
     }
 
     zoom() {
-        var size = new Size(this.img.naturalWidth, this.img.naturalHeight);
+        var naturalSize = new Size(this.img.naturalWidth, this.img.naturalHeight);
+        var imgSize = new Size(this.img.width, this.img.height);
 
         this.wrap = document.createElement("div");
         this.wrap.classList.add("zoom-img-wrap");
@@ -37,20 +38,37 @@ export class ZoomImage {
         document.body.appendChild(this.overlay);
 
         this.forceRepaint();
-        var scale = this.calculateScale(size);
+        var scale = this.calculateScale(naturalSize);
 
         this.forceRepaint();
-        this.animate(scale);
+        this.animate(scale, imgSize);
 
         document.body.classList.add("zoom-overlay-open");
+
+        once(this.img, "transitionend", () => {
+            if(this.img.hasAttribute('srcset')){
+                this.img.setAttribute('sizes', Math.ceil(this.img.width * scale) + 'px');
+            }
+        });
     }
 
     calculateScale(size) {
+
+        var imageAspectRatio = size.w / size.h;
+
+        if(this.img.hasAttribute('srcset')){
+            var srcSetMaxWidth = srcsetMaxWidth(this.img);
+
+            if(srcSetMaxWidth > 0) {
+                size.w = srcSetMaxWidth *  window.devicePixelRatio;
+                size.h = size.w / imageAspectRatio;
+            }
+        }
+
         var maxScaleFactor = size.w / this.img.width;
 
         var viewportWidth = (windowWidth() - this.offset);
         var viewportHeight = (windowHeight() - this.offset);
-        var imageAspectRatio = size.w / size.h;
         var viewportAspectRatio = viewportWidth / viewportHeight;
 
         if (size.w < viewportWidth && size.h < viewportHeight) {
@@ -62,15 +80,15 @@ export class ZoomImage {
         }
     }
 
-    animate(scale) {
+    animate(scale, size) {
         var imageOffset = elemOffset(this.img);
         var scrollTop = window.pageYOffset;
 
         var viewportX = (windowWidth() / 2);
         var viewportY = scrollTop + (windowHeight() / 2);
 
-        var imageCenterX = imageOffset.left + (this.img.width / 2);
-        var imageCenterY = imageOffset.top + (this.img.height / 2);
+        var imageCenterX = imageOffset.left + (size.w / 2);
+        var imageCenterY = imageOffset.top + (size.h / 2);
 
         var tx = viewportX - imageCenterX;
         var ty = viewportY - imageCenterY;
@@ -104,6 +122,8 @@ export class ZoomImage {
             this.img.removeAttribute("style");
         }
         this.wrap.style.transform = "none";
+
+        srcsetFixSizes([this.img]);
 
         once(this.img, "transitionend", () => {
             this.dispose();
