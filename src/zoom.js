@@ -4,15 +4,14 @@
  * Original preamble:
  * zoom.js - It's the best way to zoom an image
  * @version v0.0.2
- * @link https://github.com/fat/zoom.js
+ * @link https://github.com/nishanths/zoom.js
  * @license MIT
  *
  * Needs a related CSS file to work. See the README at
- * https://github.com/nishanths/zoom.js for more info.
+ * https://github.com/willemvb/zoom.js for more info.
  *
  * This is a fork of the original zoom.js implementation by @fat.
- * Copyrights for the original project are held by @fat. All other copyright
- * for changes in the fork are held by Nishanth Shanmugham.
+ * Copyrights for the original project are held by @fat and Nishanth Shanmugham.
  *
  * Copyright (c) 2013 @fat
  * The MIT License. Copyright © 2016 Nishanth Shanmugham.
