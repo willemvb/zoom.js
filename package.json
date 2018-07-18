@@ -1,5 +1,5 @@
 {
-  "name": "willemvb/zoom.js",
+  "name": "@willemvb/zoom.js",
   "version": "2.0.1",
   "description": "Medium.com's image zoom with no dependencies",
   "main": "dist/zoom.js",
