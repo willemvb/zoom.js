@@ -58,6 +58,7 @@ You can use zoom.js directly as a script, or install via [yarn](https://github.c
 
 https://htmlpreview.github.io/?https://github.com/willemvb/zoom.js/blob/master/index.html
 
+First image has a standard `src`, second one uses `srcset`.
 
 ## Notes
 
@@ -65,9 +66,6 @@ It has the same behavior and all the features from the original implementation. 
 
 ```
 * It has srcset support
-* In addition to the dist/ scripts, it's available as an npm module.
-* Browser compatibility may be lower. Uses the transitionend event without
-  vendor prefixes, so IE 10 or higher.
 ```
 
 ## License
